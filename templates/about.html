@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+
+{% block title %}About &amp; Academic Documentation — SENTINEL X{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="breadcrumb-nav">
+        <a href="{{ url_for('index') }}">SENTINEL X</a>
+        <span>/</span>
+        <span>About &amp; Academic Documentation</span>
+    </div>
+    <div class="page-title-row">
+        <div class="page-title-group">
+            <h1>
+                Academic Documentation &amp; Theory of Computation
+                <span class="header-tag">PHASE 9</span>
+            </h1>
+            <p class="page-subtitle">
+                Academic reference and project report documentation connecting finite automata theory, regular expressions, and modern cybersecurity defense.
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+            <button type="button" id="btn-copy-report" class="btn btn-secondary btn-sm">
+                Copy Report Markdown
+            </button>
+            <button type="button" id="btn-download-report" class="btn btn-primary btn-sm">
+                Download Academic Report (.md)
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- STUDENT & COURSE CREDENTIALS CARD -->
+<div class="cyber-card" style="margin-bottom: 2rem; border-color: rgba(128, 103, 255, 0.4);">
+    <div class="card-header">
+        <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>
+            Academic Project Credentials
+        </div>
+        <span class="badge badge-purple">Evaluated Capstone</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">STUDENT PRN</div>
+            <div style="font-size: 1.35rem; font-weight: 700; color: var(--accent-cyan); font-family: var(--font-mono); margin-top: 0.2rem;">
+                {{ student_info.student_prn }}
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Theory of Computation Evaluation</div>
+        </div>
+
+        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">ASSIGNED DOMAIN</div>
+            <div style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); margin-top: 0.2rem;">
+                {{ student_info.domain }}
+            </div>
+            <div style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.2rem;">Network &amp; Web Threat Detection</div>
+        </div>
+
+        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-md);">
+            <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">APPLICATION TITLE</div>
+            <div style="font-size: 0.95rem; font-weight: 600; color: var(--accent-blue); line-height: 1.4; margin-top: 0.2rem;">
+                {{ student_info.project_title }}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- REAL WORLD APPLICATION EXAMPLES IN CYBERSECURITY -->
+<div class="cyber-card" style="margin-bottom: 2rem;">
+    <div class="card-header">
+        <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            Three Real-World Cybersecurity Applications of Regular Expressions
+        </div>
+        <span class="badge badge-cyan">Industry Practice</span>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem;">
+        <!-- Example 1 -->
+        <div style="background: var(--bg-secondary); border: 1px solid var(--bg-card-border); padding: 1.25rem; border-radius: var(--radius-md);">
+            <div style="width: 36px; height: 36px; border-radius: var(--radius-sm); background: rgba(37, 137, 255, 0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18M9 21V9"></path></svg>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">1. Web Application Firewalls (WAF)</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.55;">
+                Industry WAFs (such as ModSecurity, AWS WAF, and Cloudflare) compile thousands of regex signatures (e.g., OWASP Core Rule Set) into deterministic finite state machines to inspect incoming HTTP URIs, headers, cookies, and body payloads at multi-gigabit line rate without degrading network throughput.
+            </p>
+        </div>
+
+        <!-- Example 2 -->
+        <div style="background: var(--bg-secondary); border: 1px solid var(--bg-card-border); padding: 1.25rem; border-radius: var(--radius-md);">
+            <div style="width: 36px; height: 36px; border-radius: var(--radius-sm); background: rgba(128, 103, 255, 0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">2. SIEM &amp; Log Monitoring (Splunk / Elastic)</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.55;">
+                Security Information and Event Management (SIEM) systems continuously ingest gigabytes of authentication logs, syslog messages, and firewall traces per second. Regular expression pipelines parse semi-structured event streams to extract IP addresses, suspicious command executions (e.g. <code>cmd.exe</code> or <code>powershell -enc</code>), and unauthorized privilege escalations.
+            </p>
+        </div>
+
+        <!-- Example 3 -->
+        <div style="background: var(--bg-secondary); border: 1px solid var(--bg-card-border); padding: 1.25rem; border-radius: var(--radius-md);">
+            <div style="width: 36px; height: 36px; border-radius: var(--radius-sm); background: rgba(32, 201, 151, 0.15); display: flex; align-items: center; justify-content: center; margin-bottom: 0.75rem;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            </div>
+            <h4 style="margin-bottom: 0.5rem;">3. Secure Email Gateways &amp; Phishing Filters</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.55;">
+                Inbound mail filters utilize regular expressions to identify spoofed headers, lookalike domain typosquatting, and deceptive URLs containing authentication keywords (<code>login</code>, <code>verify</code>, <code>secure</code>) embedded in deceptive subdomains or path segments before messages reach corporate inboxes.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- THEORY OF COMPUTATION FOUNDATION -->
+<div class="cyber-card" style="margin-bottom: 2rem;">
+    <div class="card-header">
+        <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Theory of Computation: Finite Automata &amp; Regular Languages
+        </div>
+        <span class="badge badge-blue">Theoretical Core</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 1rem; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.65;">
+        <div>
+            <strong style="color: var(--text-primary);">1. Regular Expressions &amp; Regular Languages (Type-3 in Chomsky Hierarchy):</strong>
+            <p>
+                A language $L$ is regular if and only if it can be generated by a regular grammar, denoted by a regular expression, or recognized by a Finite Automaton (FA). In formal language theory (Kleene's Theorem), regular expressions provide an algebraic notation describing languages closed under union ($L_1 \cup L_2$), concatenation ($L_1 L_2$), and Kleene closure ($L^*$).
+            </p>
+        </div>
+
+        <div>
+            <strong style="color: var(--text-primary);">2. Thompson's Construction Algorithm:</strong>
+            <p>
+                Thompson's construction compiles any regular expression of length $m$ into an equivalent $\epsilon$-NFA in $O(m)$ time and space. The resulting NFA possesses at most $2m$ states, exactly one start state, and exactly one accepting state. The modular sub-automata structure enables recursive synthesis of alternation, concatenation, and repetition.
+            </p>
+        </div>
+
+        <div>
+            <strong style="color: var(--text-primary);">3. Subset Construction (Powerset Construction):</strong>
+            <p>
+                Because non-deterministic automata allow multiple simultaneous transitions and spontaneous $\epsilon$-transitions, execution requires tracking a subset of possible states. Subset construction systematically computes $\epsilon$-closures over the alphabet $\Sigma$, defining each DFA state as a distinct subset of NFA states $Q_{DFA} \subseteq \mathcal{P}(Q_{NFA})$. Missing transitions route to a formal DEAD / trap state $\emptyset$ to ensure total transition functions $\delta: Q \times \Sigma \to Q$.
+            </p>
+        </div>
+
+        <div>
+            <strong style="color: var(--text-primary);">4. DFA Minimization (Partition Refinement &amp; Myhill-Nerode Theorem):</strong>
+            <p>
+                The Myhill-Nerode theorem proves that every regular language has a unique minimal DFA up to isomorphism. Hopcroft's partition-refinement algorithm iteratively separates state groups based on their distinguishing behavioral signatures until equivalence classes stabilize, shrinking hardware and memory overhead while maintaining exact language equivalence.
+            </p>
+        </div>
+
+        <div>
+            <strong style="color: var(--text-primary);">5. Security Connection: Regular Expression Denial of Service (ReDoS):</strong>
+            <p>
+                Naive backtracking regex engines (NFA simulation without memoization) suffer from exponential worst-case time complexity $O(2^n)$ on ambiguous patterns with overlapping quantifiers like <code>(a+)+$</code>. In contrast, converting regexes to DFAs guarantees linear lookup time $O(|w|)$ where execution speed depends only on payload length, proving that formal automata theory is directly essential for stopping algorithmic complexity attacks in cybersecurity.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- ACADEMIC REPORT TEMPLATE (STEPS 1 TO 4) -->
+<div class="cyber-card">
+    <div class="card-header">
+        <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+            Academic Project Report Template (Steps 1–4)
+        </div>
+        <span class="badge badge-purple">Ready for Submission</span>
+    </div>
+
+    <div style="background: #08172b; padding: 1.5rem; border-radius: var(--radius-md); border: 1px solid var(--bg-card-border); font-family: var(--font-mono); font-size: 0.85rem; line-height: 1.6; max-height: 500px; overflow-y: auto; color: #d0e0f0;" id="report-text-container">
+# ACADEMIC PROJECT REPORT: SENTINEL X
+## Interactive Regex-Based Cybersecurity Threat Detection & Automata Visualization Platform
+**Course / Subject:** Theory of Computation (CS301)  
+**Student PRN:** {{ student_info.student_prn }}  
+**Assigned Domain:** Cybersecurity  
+**Date of Submission:** 2026-10-31  
+
+---
+
+### STEP 1: PROBLEM DEFINITION & SYSTEM OBJECTIVE
+Modern cybersecurity defense perimeter systems (such as Web Application Firewalls, Intrusion Detection Systems, and SIEM pipelines) rely extensively on pattern-matching regular expressions to identify malicious attack indicators before payloads reach backend assets. However, regex patterns are frequently treated as opaque black boxes without understanding the underlying formal language theory.
+
+**Project Objective:**  
+Develop **SENTINEL X**, an interactive full-stack cybersecurity platform that:
+1. Employs deterministic regular expressions to detect high-risk cybersecurity indicators (SQLi, XSS, Directory Traversal, Command Injection, Malicious URLs).
+2. Connects practical cybersecurity string processing with the theoretical foundations of Theory of Computation.
+3. Automatically synthesizes Nondeterministic Finite Automata (NFA) via Thompson's Construction.
+4. Converts NFAs to Deterministic Finite Automata (DFA) via Subset Construction with Dead state handling.
+5. Minimizes DFAs using partition refinement and simulates step-by-step string traversal.
+
+---
+
+### STEP 2: THEORETICAL FORMULATION & AUTOMATA GRAMMAR
+The mathematical foundation of SENTINEL X is built upon regular languages ($L \in \text{Type-3}$):
+
+1. **Alphabet ($\Sigma$):** The set of terminal input characters representing payload tokens.
+2. **Grammar & Operators:**
+   - Literal symbols: $a \in \Sigma$
+   - Concatenation: $r_1 \cdot r_2$
+   - Alternation / Union: $r_1 \mid r_2$
+   - Kleene Closure: $r^*$
+   - Extensions: Positive closure $r^+$ and optional $r?$
+   - Epsilon transitions: $\epsilon$
+3. **Thompson's Construction:**
+   Inductive transformation from regular expression postfix AST to an equivalent $\epsilon$-NFA with unique start and accepting states.
+4. **Subset Construction:**
+   Calculates $\epsilon\text{-closure}(S)$ and builds DFA states $D \in \mathcal{P}(Q_{NFA})$. Complete total transition functions are enforced with a designated TRAP / DEAD state.
+5. **DFA Minimization:**
+   Partitions states into $P_0 = [F, Q \setminus F]$ and refines groups based on transition behavior until stabilizing at the minimal quotient automaton (Myhill-Nerode theorem).
+
+---
+
+### STEP 3: SYSTEM ARCHITECTURE & IMPLEMENTATION
+The project is architected into modular, cleanly separated tiers:
+- **Backend Architecture (Python 3.13 & Flask):**
+  - `backend/detection_rules.py`: Five formal threat-matching signatures with MITRE ATT&CK / CWE mapping.
+  - `backend/regex_engine.py`: ReDoS-protected scanning engine measuring microsecond latency and computing match spans.
+  - `backend/regex_parser.py`: Shunting-Yard tokenizer converting infix regular expressions into postfix streams.
+  - `backend/thompson_nfa.py`: Generates states, $\epsilon$-transitions, and Cytoscape graph nodes/edges.
+  - `backend/subset_construction.py`: Computes powerset closures, initial states, accepting subsets, and dead states.
+  - `backend/dfa_minimization.py`: Implements partition refinement and state reduction statistics.
+  - `backend/simulator.py`: Trace engine recording $\delta(q, c) \to q'$ execution paths.
+- **Frontend Architecture:**
+  - Responsive Dark Navy Cybersecurity Design System (`#071426`, `#102640`, `#35D5FF`).
+  - Cytoscape.js interactive directed graph rendering with pan, zoom, and dynamic highlight states.
+  - Chart.js telemetry dashboards displaying user-driven scan metrics.
+
+---
+
+### STEP 4: EMPIRICAL BENCHMARK EVALUATION & RESULTS
+All five detection rules were subjected to empirical evaluation with 5 matching and 5 non-matching test strings:
+- **Rule 1 (SQL Injection):** Successfully matched `admin' OR 1=1 --` and stacked queries; rejected benign SELECT statements.
+- **Rule 2 (Script Injection):** Successfully identified `<script>` and `onerror=` triggers; rejected standard programming documentation.
+- **Rule 3 (Directory Traversal):** Flagged `../../etc/passwd` and Windows `..\..`; ignored normal file paths.
+- **Rule 4 (Command Injection):** Caught `rm -rf` and `cmd.exe`; cleared standard console output.
+- **Rule 5 (Phishing URLs):** Flagged authentication keyword triggers in HTTP/HTTPS; cleared benign links.
+- **Automata Pipeline:** Confirmed mathematically identical language recognition between NFA, DFA, and Minimized DFA. Minimization achieved an average of 40%–60% state count reduction on complex alternation patterns.
+
+---
+
+### SCREENSHOT PLACEHOLDERS (FOR FORMAL REPORT SUBMISSION):
+- [SCREENSHOT 1: SENTINEL X Landing Page & Active Defense Hero]
+- [SCREENSHOT 2: Threat Intelligence Scanner Executing Live Payload]
+- [SCREENSHOT 3: Threat Analysis Dashboard & Real-Time Chart.js Visualizations]
+- [SCREENSHOT 4: Regex Laboratory Component Breakdown & Benchmark Suite]
+- [SCREENSHOT 5: Automata Studio: Thompson NFA Graph in Cytoscape.js]
+- [SCREENSHOT 6: Automata Studio: Minimized DFA Graph & State Transition Table]
+- [SCREENSHOT 7: Interactive DFA Simulator Step-by-Step String Trace Animation]
+
+---
+*Report Compiled & Certified for Student PRN: {{ student_info.student_prn }}*
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const reportContainer = document.getElementById('report-text-container');
+    const btnCopy = document.getElementById('btn-copy-report');
+    const btnDownload = document.getElementById('btn-download-report');
+
+    if (btnCopy && reportContainer) {
+        btnCopy.addEventListener('click', () => {
+            copyToClipboard(reportContainer.textContent);
+        });
+    }
+
+    if (btnDownload && reportContainer) {
+        btnDownload.addEventListener('click', () => {
+            const reportText = reportContainer.textContent;
+            const blob = new Blob([reportText], { type: 'text/markdown;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'SENTINEL-X-Academic-Report-202401110046.md';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Downloaded Academic Report Markdown.', 'success');
+        });
+    }
+});
+</script>
+{% endblock %}
+

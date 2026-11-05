@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+
+{% block title %}DFA String Simulator — SENTINEL X{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="breadcrumb-nav">
+        <a href="{{ url_for('index') }}">SENTINEL X</a>
+        <span>/</span>
+        <a href="{{ url_for('automata_studio') }}">Automata Studio</a>
+        <span>/</span>
+        <span>DFA String Simulator</span>
+    </div>
+    <div class="page-title-row">
+        <div class="page-title-group">
+            <h1>
+                Interactive DFA String Simulator
+                <span class="header-tag">PHASE 8</span>
+            </h1>
+            <p class="page-subtitle">
+                Step-by-step trace simulation across deterministic finite automata states.
+                Observe transitions, detect trapped execution paths, and evaluate final acceptance criteria.
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+            <a href="{{ url_for('automata_studio') }}" class="btn btn-secondary btn-sm">
+                ← Return to Automata Studio
+            </a>
+            <button type="button" id="btn-export-sim-json" class="btn btn-secondary btn-sm">
+                Export Trace JSON
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- SIMULATOR SETUP & INPUT CARD -->
+<div class="cyber-card" style="margin-bottom: 2rem;">
+    <div class="card-header">
+        <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            Automaton &amp; Input String Configuration
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Target Model:</span>
+            <select id="sim-automaton-type" class="form-control" style="padding: 0.35rem 0.75rem; font-size: 0.82rem; width: auto;">
+                <option value="minimized" selected>Minimized DFA (Optimal)</option>
+                <option value="dfa">Standard Subset DFA</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Quick Test Strings Presets -->
+    <div style="margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.65rem; flex-wrap: wrap;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Quick Test Presets for (a|b)*c:</span>
+        <button type="button" class="btn btn-secondary btn-sm btn-sim-preset" data-str="c" data-expr="(a|b)*c">c (Accept)</button>
+        <button type="button" class="btn btn-secondary btn-sm btn-sim-preset" data-str="abc" data-expr="(a|b)*c">abc (Accept)</button>
+        <button type="button" class="btn btn-secondary btn-sm btn-sim-preset" data-str="abbac" data-expr="(a|b)*c">abbac (Accept)</button>
+        <button type="button" class="btn btn-secondary btn-sm btn-sim-preset" data-str="abba" data-expr="(a|b)*c">abba (Reject)</button>
+        <button type="button" class="btn btn-secondary btn-sm btn-sim-preset" data-str="abz" data-expr="(a|b)*c">abz (Unrecognized)</button>
+    </div>
+
+    <form id="simulator-form">
+        <div style="display: grid; grid-template-columns: 1fr 1.2fr auto; gap: 1rem; align-items: flex-end;">
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="sim-pattern" class="form-label">Underlying Regular Expression</label>
+                <input 
+                    type="text" 
+                    id="sim-pattern" 
+                    class="form-control font-mono" 
+                    placeholder="e.g. (a|b)*c" 
+                    value="(a|b)*c"
+                    required
+                >
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label for="sim-input-string" class="form-label">Simulation Input String w ∈ Σ*</label>
+                <input 
+                    type="text" 
+                    id="sim-input-string" 
+                    class="form-control font-mono" 
+                    placeholder="e.g. abbc" 
+                    value="abbc"
+                >
+            </div>
+
+            <button type="submit" id="btn-load-sim" class="btn btn-primary" style="padding: 0.8rem 1.4rem;">
+                Load &amp; Prepare Simulation
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- PLAYBACK CONTROLLER & VERDICT BANNER -->
+<div class="cyber-card" style="margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
+        <!-- Playback Controls -->
+        <div style="display: flex; gap: 0.65rem; align-items: center;">
+            <button type="button" id="btn-sim-reset" class="btn btn-secondary btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path></svg>
+                Reset
+            </button>
+            <button type="button" id="btn-sim-play" class="btn btn-cyan btn-sm">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Play Auto
+            </button>
+            <button type="button" id="btn-sim-pause" class="btn btn-secondary btn-sm" style="display:none;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="4" height="16" x="6" y="4"></rect><rect width="4" height="16" x="14" y="4"></rect></svg>
+                Pause
+            </button>
+            <button type="button" id="btn-sim-step" class="btn btn-primary btn-sm">
+                Next Step →
+            </button>
+            
+            <div style="display: flex; align-items: center; gap: 0.4rem; margin-left: 0.5rem; font-size: 0.8rem; color: var(--text-muted);">
+                <span>Speed:</span>
+                <select id="sim-speed" class="form-control" style="padding: 0.2rem 0.5rem; font-size: 0.8rem; width: auto;">
+                    <option value="1200">Slow (1.2s)</option>
+                    <option value="750" selected>Normal (0.75s)</option>
+                    <option value="350">Fast (0.35s)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Step Indicator -->
+        <div style="display: flex; gap: 1rem; align-items: center; font-family: var(--font-mono); font-size: 0.85rem;">
+            <span>Current Step: <strong id="sim-current-step-label" style="color:var(--accent-cyan);">0 / 0</strong></span>
+            <span>Current State: <strong id="sim-current-state-label" style="color:var(--text-primary);">-</strong></span>
+        </div>
+    </div>
+
+    <!-- Verdict Banner -->
+    <div id="sim-verdict-banner" style="display: none; padding: 1rem 1.25rem; border-radius: var(--radius-md); font-size: 0.95rem; border: 1px solid transparent;">
+        <!-- Filled by JS -->
+    </div>
+</div>
+
+<!-- SIMULATOR DUAL VIEW: CYTOSCAPE GRAPH & TRANSITION TIMELINE -->
+<div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 1.75rem; margin-bottom: 2rem;">
+    <!-- Cytoscape Graph with Highlight -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <div class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+                Active Automaton State
+            </div>
+            <span class="badge badge-cyan" id="graph-state-badge">Ready</span>
+        </div>
+
+        <div id="sim-cy" class="cytoscape-container" style="height: 420px;">
+            <div class="cy-legend">
+                <div class="legend-item"><span class="legend-swatch swatch-active"></span> Current Active State</div>
+                <div class="legend-item"><span class="legend-swatch swatch-accept"></span> Accepting State (*)</div>
+                <div class="legend-item"><span class="legend-swatch swatch-dead"></span> Dead State</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Step Timeline Table -->
+    <div class="cyber-card" style="display: flex; flex-direction: column;">
+        <div class="card-header">
+            <div class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2"><line x1="12" y1="20" x2="12" y2="10"></line><line x1="18" y1="20" x2="18" y2="4"></line><line x1="6" y1="20" x2="6" y2="16"></line></svg>
+                Transition Sequence Trace
+            </div>
+            <span class="badge badge-purple font-mono" id="timeline-step-count">0 Steps</span>
+        </div>
+
+        <div class="table-responsive" style="flex: 1; max-height: 380px; overflow-y: auto;">
+            <table class="cyber-table" style="font-size: 0.85rem;">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">Step</th>
+                        <th style="width: 60px;">Symbol</th>
+                        <th>Transition δ</th>
+                        <th>State Type</th>
+                    </tr>
+                </thead>
+                <tbody id="sim-timeline-body">
+                    <!-- Step rows generated by simulator.js -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/simulator.js') }}"></script>
+{% endblock %}
+

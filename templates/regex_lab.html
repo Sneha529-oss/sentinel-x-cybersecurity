@@ -1,0 +1,341 @@
+{% extends "base.html" %}
+
+{% block title %}Regex Laboratory — SENTINEL X{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="breadcrumb-nav">
+        <a href="{{ url_for('index') }}">SENTINEL X</a>
+        <span>/</span>
+        <span>Regex Laboratory</span>
+    </div>
+    <div class="page-title-row">
+        <div class="page-title-group">
+            <h1>
+                Regex Laboratory
+                <span class="header-tag">PHASE 5</span>
+            </h1>
+            <p class="page-subtitle">
+                Inspect, test, and dissect cybersecurity regular expressions. Experiment with custom expressions or evaluate the five core threat-detection patterns.
+            </p>
+        </div>
+        <div>
+            <a href="{{ url_for('automata_studio') }}" class="btn btn-secondary btn-sm">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="18" r="3"></circle><line x1="8.5" y1="7.5" x2="15.5" y2="16.5"></line></svg>
+                Send Pattern to Automata Studio →
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- INTERACTIVE CUSTOM REGEX TESTER -->
+<div class="cyber-card" style="margin-bottom: 2.5rem; border-color: rgba(53, 213, 255, 0.4);">
+    <div class="card-header">
+        <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"></polyline><line x1="12" x2="20" y1="19" y2="19"></line></svg>
+            Interactive Regex Tester &amp; Live Matcher
+        </div>
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <label style="font-size: 0.8rem; display: flex; align-items: center; gap: 0.35rem; cursor: pointer; color: var(--text-secondary);">
+                <input type="checkbox" id="custom-case-sensitive" checked>
+                <span>Case Sensitive</span>
+            </label>
+            <span class="badge badge-clean">ReDoS Protected</span>
+        </div>
+    </div>
+
+    <!-- Quick Load Dropdown -->
+    <div style="margin-bottom: 1.25rem; display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+        <span style="font-size: 0.85rem; color: var(--text-muted);">Quick-load built-in rule:</span>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            {% for r in rules %}
+            <button type="button" class="btn btn-secondary btn-sm btn-quick-load" data-pattern="{{ r.pattern }}" data-sample="{{ r.matching_cases[0] }}">
+                {{ r.name }}
+            </button>
+            {% endfor %}
+        </div>
+    </div>
+
+    <form id="custom-regex-form">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+            <div class="form-group">
+                <label for="custom-pattern" class="form-label">Regular Expression Pattern</label>
+                <input 
+                    type="text" 
+                    id="custom-pattern" 
+                    class="form-control font-mono" 
+                    placeholder="e.g. (?i)(union\s+select|or\s+1=1)" 
+                    value="(?i)(union\s+select|or\s+1=1|drop\s+table)"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label for="custom-test-text" class="form-label">Test Input Text</label>
+                <textarea 
+                    id="custom-test-text" 
+                    class="form-control font-mono" 
+                    placeholder="Enter test string to evaluate against pattern..."
+                    rows="3"
+                >SELECT * FROM accounts WHERE id = 1 UNION  SELECT username, password FROM admin;</textarea>
+            </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.5rem;">
+            <div id="custom-error-box" style="display: none; color: var(--color-danger); font-size: 0.85rem; font-family: var(--font-mono);"></div>
+            <button type="submit" id="btn-run-custom" class="btn btn-cyan" style="margin-left: auto;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                Execute Regex Test
+            </button>
+        </div>
+    </form>
+
+    <!-- Match Results Output -->
+    <div id="custom-results-panel" style="margin-top: 1.5rem; border-top: 1px solid var(--bg-card-border); padding-top: 1.25rem;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <span id="custom-match-count-badge" class="badge badge-danger">1 Match Found</span>
+                <span id="custom-duration-badge" class="font-mono" style="font-size: 0.8rem; color: var(--text-muted);">0.12 ms</span>
+            </div>
+            <span style="font-size: 0.8rem; color: var(--text-muted);">Matching highlighted below:</span>
+        </div>
+
+        <div id="custom-highlighted-view" style="background: #08172b; padding: 1rem; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 0.9rem; word-break: break-all; border: 1px solid var(--bg-card-border); margin-bottom: 1rem;">
+            <!-- Rendered by JS -->
+        </div>
+
+        <!-- Coordinates list -->
+        <div id="custom-matches-coords" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+</div>
+
+<!-- FIVE BUILT-IN CYBERSECURITY RULES DEEP DIVE -->
+<div style="margin-bottom: 2rem;">
+    <div style="margin-bottom: 1.5rem;">
+        <h2>The Five Built-in Detection Rules</h2>
+        <p class="page-subtitle">
+            Comprehensive breakdown of pattern architecture, syntactic components, and empirical benchmark evaluations.
+        </p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 2rem;">
+        {% for rule in rules %}
+        <div class="cyber-card" id="card-{{ rule.id }}">
+            <div class="card-header">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem;">
+                        <span class="badge badge-purple">{{ rule.id }}</span>
+                        <h3 style="font-size: 1.25rem;">{{ rule.name }}</h3>
+                        <span class="badge badge-danger">{{ rule.severity }}</span>
+                        <span class="badge badge-blue">{{ rule.category }}</span>
+                    </div>
+                    <div style="font-size: 0.75rem; color: var(--text-muted); font-family: var(--font-mono);">
+                        MITRE / CWE: {{ rule.mitre_id }}
+                    </div>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn btn-secondary btn-sm btn-load-to-tester" data-pattern="{{ rule.pattern }}" data-sample="{{ rule.matching_cases[0] }}">
+                        Load in Tester
+                    </button>
+                    <a href="{{ url_for('automata_studio') }}?pattern={{ rule.pattern|urlencode }}" class="btn btn-secondary btn-sm" title="Visualize Automaton">
+                        View Automata →
+                    </a>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.25rem;">
+                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.3rem;">Configured Regex Pattern:</div>
+                <code style="display: block; background: #08172b; padding: 0.75rem 1rem; border-radius: var(--radius-md); color: var(--accent-cyan); font-size: 0.95rem; border: 1px solid var(--bg-card-border);">${{ rule.pattern }}$</code>
+            </div>
+
+            <div style="margin-bottom: 1.25rem; font-size: 0.92rem; color: var(--text-secondary); line-height: 1.6;">
+                <strong style="color: var(--text-primary);">Purpose:</strong> {{ rule.purpose }}
+                <p style="margin-top: 0.35rem;">{{ rule.explanation }}</p>
+            </div>
+
+            <!-- Syntactic Component Breakdown -->
+            <div style="margin-bottom: 1.5rem;">
+                <div style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.5rem; color: var(--accent-cyan);">
+                    Syntactic Component Breakdown:
+                </div>
+                <div class="table-responsive">
+                    <table class="cyber-table" style="font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th style="width: 25%;">Regex Component</th>
+                                <th>Theoretical Meaning &amp; Function</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for comp in rule.components %}
+                            <tr>
+                                <td><code style="color: var(--accent-cyan); font-weight: 600;">{{ comp.token }}</code></td>
+                                <td style="color: var(--text-secondary);">{{ comp.meaning }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Test Cases Grid: 5 Matching & 5 Non-Matching -->
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-primary);">
+                        Empirical Benchmark Test Suite (5 Matching vs 5 Non-Matching):
+                    </div>
+                    <button class="btn btn-primary btn-sm btn-run-rule-suite" data-rule-id="{{ rule.id }}">
+                        ▶ Run Rule Test Suite
+                    </button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                    <!-- 5 Matching Cases -->
+                    <div style="background: var(--bg-secondary); border: 1px solid rgba(255, 82, 99, 0.25); border-radius: var(--radius-md); padding: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+                            <span style="font-weight: 600; color: var(--color-danger); font-size: 0.85rem;">5 Expected MATCHING Strings:</span>
+                            <span class="badge badge-danger">Expected: Match</span>
+                        </div>
+                        <div class="test-cases-list matching-list" data-rule-id="{{ rule.id }}">
+                            {% for tc in rule.matching_cases %}
+                            <div class="test-case-row" data-string="{{ tc }}" style="display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0.6rem; border-radius: 4px; background: #08172b; margin-bottom: 0.4rem; font-family: var(--font-mono); font-size: 0.8rem;">
+                                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%;" title="{{ tc }}">{{ tc }}</span>
+                                <span class="tc-result-badge badge badge-blue">Pending</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- 5 Non-Matching Cases -->
+                    <div style="background: var(--bg-secondary); border: 1px solid rgba(32, 201, 151, 0.25); border-radius: var(--radius-md); padding: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem;">
+                            <span style="font-weight: 600; color: var(--color-success); font-size: 0.85rem;">5 Expected NON-MATCHING Strings:</span>
+                            <span class="badge badge-clean">Expected: No Match</span>
+                        </div>
+                        <div class="test-cases-list non-matching-list" data-rule-id="{{ rule.id }}">
+                            {% for tc in rule.non_matching_cases %}
+                            <div class="test-case-row" data-string="{{ tc }}" style="display: flex; justify-content: space-between; align-items: center; padding: 0.45rem 0.6rem; border-radius: 4px; background: #08172b; margin-bottom: 0.4rem; font-family: var(--font-mono); font-size: 0.8rem;">
+                                <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%;" title="{{ tc }}">{{ tc }}</span>
+                                <span class="tc-result-badge badge badge-blue">Pending</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<!-- REGEX TOKENS CHEAT SHEET SECTION -->
+<div class="cyber-card">
+    <div class="card-header">
+        <div class="card-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Theory of Computation: Regular Expression Metacharacters Reference
+        </div>
+        <span class="badge badge-cyan">Syntax Guide</span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="cyber-table">
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Name</th>
+                    <th>Formal Meaning</th>
+                    <th>Example Expression</th>
+                    <th>Sample Matches</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code style="color:var(--accent-cyan); font-weight:700;">\d</code></td>
+                    <td>Digit</td>
+                    <td>Matches any ASCII numeric digit [0-9]</td>
+                    <td><code>id=\d+</code></td>
+                    <td><code>id=123</code>, <code>id=0</code></td>
+                </tr>
+                <tr>
+                    <td><code style="color:var(--accent-cyan); font-weight:700;">\w</code></td>
+                    <td>Word Character</td>
+                    <td>Matches alphanumeric character or underscore [a-zA-Z0-9_]</td>
+                    <td><code>user_\w+</code></td>
+                    <td><code>user_admin</code>, <code>user_42</code></td>
+                </tr>
+                <tr>
+                    <td><code style="color:var(--accent-cyan); font-weight:700;">\s</code></td>
+                    <td>Whitespace</td>
+                    <td>Matches space, tab, newline, carriage return</td>
+                    <td><code>union\s+select</code></td>
+                    <td><code>union select</code>, <code>union    select</code></td>
+                </tr>
+                <tr>
+                    <td><code style="color:var(--accent-cyan); font-weight:700;">*</code></td>
+                    <td>Kleene Star</td>
+                    <td>Zero or more repetitions of preceding element (L*)</td>
+                    <td><code>a*b</code></td>
+                    <td><code>b</code>, <code>ab</code>, <code>aaaaab</code></td>
+                </tr>
+                <tr>
+                    <td><code style="color:var(--accent-cyan); font-weight:700;">+</code></td>
+                    <td>Positive Closure</td>
+                    <td>One or more repetitions of preceding element (L+)</td>
+                    <td><code>1+</code></td>
+                    <td><code>1</code>, <code>111</code> (not empty)</td>
+                </tr>
+                <tr>
+                    <td><code style="color:var(--accent-cyan); font-weight:700;">?</code></td>
+                    <td>Optional (0 or 1)</td>
+                    <td>Preceding token is optional; matches 0 or 1 time</td>
+                    <td><code>https?</code></td>
+                    <td><code>http</code>, <code>https</code></td>
+                </tr>
+                <tr>
+                    <td><code style="color:var(--accent-cyan); font-weight:700;">|</code></td>
+                    <td>Alternation / Union</td>
+                    <td>Matches either the expression before or after (L1 ∪ L2)</td>
+                    <td><code>admin|root</code></td>
+                    <td><code>admin</code>, <code>root</code></td>
+                </tr>
+                <tr>
+                    <td><code style="color:var(--accent-cyan); font-weight:700;">()</code></td>
+                    <td>Capturing Group</td>
+                    <td>Groups tokens together for precedence or quantified repetition</td>
+                    <td><code>(ab)+</code></td>
+                    <td><code>ab</code>, <code>ababab</code></td>
+                </tr>
+                <tr>
+                    <td><code style="color:var(--accent-cyan); font-weight:700;">[]</code></td>
+                    <td>Character Class</td>
+                    <td>Matches any single character enclosed in the set</td>
+                    <td><code>[abc]</code></td>
+                    <td><code>a</code>, <code>b</code>, or <code>c</code></td>
+                </tr>
+                <tr>
+                    <td><code style="color:var(--accent-cyan); font-weight:700;">^</code></td>
+                    <td>Start of Line Anchor</td>
+                    <td>Asserts position at the beginning of the string or line</td>
+                    <td><code>^admin</code></td>
+                    <td><code>administrator</code> (at start)</td>
+                </tr>
+                <tr>
+                    <td><code style="color:var(--accent-cyan); font-weight:700;">$</code></td>
+                    <td>End of Line Anchor</td>
+                    <td>Asserts position at the end of the string or line</td>
+                    <td><code>passwd$</code></td>
+                    <td><code>/etc/passwd</code> (at end)</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/regex_lab.js') }}"></script>
+{% endblock %}
+

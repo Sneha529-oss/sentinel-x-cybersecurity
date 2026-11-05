@@ -1,0 +1,236 @@
+{% extends "base.html" %}
+
+{% block title %}SENTINEL X — Cybersecurity Threat Detection & Automata Visualization{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="hero-section">
+    <div class="hero-content">
+        <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem;">
+            <span class="badge badge-cyan">ACADEMIC CAPSTONE PROJECT</span>
+            <span class="badge badge-purple">PRN: {{ student_info.student_prn }}</span>
+        </div>
+        
+        <h1>
+            <span class="hero-highlight">SENTINEL X</span>
+        </h1>
+        <h2 class="hero-subtitle">
+            Decode Patterns. Detect Threats. Understand Automata.
+        </h2>
+        <p class="hero-description">
+            An interactive cybersecurity platform powered by Regular Expressions and Finite Automata. Detect suspicious patterns, analyze potential threats, and explore the mathematics behind pattern recognition.
+        </p>
+
+        <div class="hero-cta-group">
+            <a href="{{ url_for('scanner') }}" class="btn btn-primary" style="padding: 0.85rem 1.8rem; font-size: 1.05rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h20M12 2v20M5 5l14 14M19 5 5 19"></path></svg>
+                Start Threat Analysis
+            </a>
+            <a href="{{ url_for('automata_studio') }}" class="btn btn-secondary" style="padding: 0.85rem 1.6rem; font-size: 1.05rem;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="18" r="3"></circle><line x1="8.5" y1="7.5" x2="15.5" y2="16.5"></line></svg>
+                Explore Automata Studio
+            </a>
+        </div>
+
+        <div style="display: flex; gap: 2rem; border-top: 1px solid var(--bg-card-border); padding-top: 1.5rem;">
+            <div>
+                <div style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: var(--accent-cyan);">5 Rules</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">Cyber Threat Rules</div>
+            </div>
+            <div>
+                <div style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: var(--color-success);">100%</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">Custom Python Automata</div>
+            </div>
+            <div>
+                <div style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; color: var(--accent-purple);">0ms API Delay</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted); font-family: var(--font-mono);">Local Real-Time Engine</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Animated Cyber Shield Visualization -->
+    <div class="hero-visual">
+        <div class="cyber-shield-container">
+            <div class="shield-ring-outer"></div>
+            <div class="shield-ring-middle"></div>
+            <div class="shield-core">
+                <svg width="68" height="68" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <polyline points="9 11 12 14 22 4"></polyline>
+                </svg>
+                <span style="font-size: 0.75rem; font-family: var(--font-mono); color: var(--accent-cyan); margin-top: 0.4rem; font-weight: 600;">ACTIVE DEFENSE</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- THREE FEATURE CARDS -->
+<section style="margin-bottom: 4rem;">
+    <div style="text-align: center; margin-bottom: 2.5rem;">
+        <span class="badge badge-blue" style="margin-bottom: 0.5rem;">CORE CAPABILITIES</span>
+        <h2>Unified Threat Intelligence & Formal Automata</h2>
+        <p class="page-subtitle" style="margin: 0.5rem auto 0;">
+            A dual-purpose platform demonstrating real-world cybersecurity detection alongside formal Theory of Computation principles.
+        </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.75rem;">
+        <!-- Card 1 -->
+        <div class="cyber-card">
+            <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: rgba(37, 137, 255, 0.15); border: 1px solid var(--accent-blue); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            </div>
+            <h3 style="margin-bottom: 0.65rem;">1. Intelligent Regex Detection</h3>
+            <p style="font-size: 0.95rem; margin-bottom: 1.25rem;">
+                Evaluates input streams against 5 distinct cybersecurity rules targeting SQL Injection, Script Injection (XSS), Directory Traversal, Malicious Commands, and Phishing URLs.
+            </p>
+            <a href="{{ url_for('scanner') }}" class="btn btn-secondary btn-sm" style="width: 100%;">
+                Scan Payloads →
+            </a>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="cyber-card">
+            <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: rgba(53, 213, 255, 0.15); border: 1px solid var(--accent-cyan); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18M9 21V9"></path></svg>
+            </div>
+            <h3 style="margin-bottom: 0.65rem;">2. Real-Time Pattern Analysis</h3>
+            <p style="font-size: 0.95rem; margin-bottom: 1.25rem;">
+                Interactive cybersecurity dashboard displaying real-time match highlighting, execution duration, category distribution charts, and persistent scan telemetry.
+            </p>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-sm" style="width: 100%;">
+                View Dashboard →
+            </a>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="cyber-card">
+            <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: rgba(128, 103, 255, 0.15); border: 1px solid var(--accent-purple); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"></circle><circle cx="18" cy="18" r="3"></circle><line x1="8.5" y1="7.5" x2="15.5" y2="16.5"></line></svg>
+            </div>
+            <h3 style="margin-bottom: 0.65rem;">3. NFA to DFA Visualization</h3>
+            <p style="font-size: 0.95rem; margin-bottom: 1.25rem;">
+                Transforms regular expressions into NFA using Thompson's Construction, converts to DFA via Subset Construction, and optimizes via partition-refinement minimization.
+            </p>
+            <a href="{{ url_for('automata_studio') }}" class="btn btn-secondary btn-sm" style="width: 100%;">
+                Open Automata Studio →
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS SECTION -->
+<section class="cyber-card" style="margin-bottom: 4rem; padding: 2.5rem;">
+    <div style="text-align: center; margin-bottom: 2.5rem;">
+        <span class="badge badge-purple" style="margin-bottom: 0.5rem;">THEORY TO PRACTICE</span>
+        <h2>How SENTINEL X Operates</h2>
+        <p class="page-subtitle" style="margin: 0.5rem auto 0;">
+            Follow the computational pipeline from raw string ingestion down to state transitions.
+        </p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; position: relative;">
+        <div style="text-align: center;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--bg-secondary); border: 2px solid var(--accent-blue); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-family: var(--font-heading); font-weight: 700; color: var(--accent-cyan);">
+                1
+            </div>
+            <h4 style="margin-bottom: 0.4rem;">Ingest Payload</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                Submit command lines, HTTP URLs, server logs, or SQL statements via the Threat Scanner.
+            </p>
+        </div>
+
+        <div style="text-align: center;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--bg-secondary); border: 2px solid var(--accent-cyan); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-family: var(--font-heading); font-weight: 700; color: var(--accent-cyan);">
+                2
+            </div>
+            <h4 style="margin-bottom: 0.4rem;">Compile & Match</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                Deterministic regex rules detect suspicious attack patterns and measure microsecond execution latency.
+            </p>
+        </div>
+
+        <div style="text-align: center;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--bg-secondary); border: 2px solid var(--accent-purple); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-family: var(--font-heading); font-weight: 700; color: var(--accent-purple);">
+                3
+            </div>
+            <h4 style="margin-bottom: 0.4rem;">Build Automata</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                Python engine parses RE syntax, computes ε-closures, power-set states, and dead trap states.
+            </p>
+        </div>
+
+        <div style="text-align: center;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: var(--bg-secondary); border: 2px solid var(--color-success); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; font-family: var(--font-heading); font-weight: 700; color: var(--color-success);">
+                4
+            </div>
+            <h4 style="margin-bottom: 0.4rem;">Trace Execution</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">
+                Step-by-step interactive simulator lights up states and transitions until formal acceptance or rejection.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- TECHNOLOGY STACK & ACADEMIC INFO -->
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+    <!-- Tech Stack -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <div class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                Technology Stack
+            </div>
+            <span class="badge badge-blue">OFFLINE & SECURE</span>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div style="background: var(--bg-secondary); padding: 0.85rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-blue);">
+                <div style="font-weight: 600; font-size: 0.9rem;">Backend Framework</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Python 3.13 + Flask REST API</div>
+            </div>
+            <div style="background: var(--bg-secondary); padding: 0.85rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-cyan);">
+                <div style="font-weight: 600; font-size: 0.9rem;">Automata Algorithms</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Custom Thompson & Subset Engines</div>
+            </div>
+            <div style="background: var(--bg-secondary); padding: 0.85rem; border-radius: var(--radius-sm); border-left: 3px solid var(--accent-purple);">
+                <div style="font-weight: 600; font-size: 0.9rem;">Graph Visualization</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Cytoscape.js Directed Automata</div>
+            </div>
+            <div style="background: var(--bg-secondary); padding: 0.85rem; border-radius: var(--radius-sm); border-left: 3px solid var(--color-success);">
+                <div style="font-weight: 600; font-size: 0.9rem;">Analytics & Telemetry</div>
+                <div style="font-size: 0.8rem; color: var(--text-muted);">Chart.js Real-time Dashboard</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Academic Information -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <div class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                Academic Project Credentials
+            </div>
+            <span class="badge badge-purple">TOC PRACTICAL</span>
+        </div>
+        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.9rem;">
+            <li style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(30, 61, 102, 0.4); padding-bottom: 0.4rem;">
+                <span style="color: var(--text-muted);">Student PRN:</span>
+                <span class="font-mono" style="color: var(--accent-cyan); font-weight: 600;">{{ student_info.student_prn }}</span>
+            </li>
+            <li style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(30, 61, 102, 0.4); padding-bottom: 0.4rem;">
+                <span style="color: var(--text-muted);">Assigned Domain:</span>
+                <span style="color: var(--text-primary); font-weight: 600;">{{ student_info.domain }}</span>
+            </li>
+            <li style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(30, 61, 102, 0.4); padding-bottom: 0.4rem;">
+                <span style="color: var(--text-muted);">Core Theory:</span>
+                <span style="color: var(--text-primary); text-align: right;">Regular Expressions, Thompson's NFA, Subset DFA</span>
+            </li>
+            <li style="display: flex; justify-content: space-between; padding-top: 0.2rem;">
+                <span style="color: var(--text-muted);">Academic Report:</span>
+                <a href="{{ url_for('about') }}" style="color: var(--accent-cyan); font-weight: 600;">View Report &amp; Documentation →</a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
+

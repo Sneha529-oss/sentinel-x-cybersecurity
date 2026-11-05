@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}Threat Intelligence Scanner — SENTINEL X{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="breadcrumb-nav">
+        <a href="{{ url_for('index') }}">SENTINEL X</a>
+        <span>/</span>
+        <span>Threat Intelligence Scanner</span>
+    </div>
+    <div class="page-title-row">
+        <div class="page-title-group">
+            <h1>
+                Threat Intelligence Scanner
+                <span class="header-tag">PHASE 2</span>
+            </h1>
+            <p class="page-subtitle">
+                Inspect arbitrary input payloads across five cybersecurity detection rules. Submit raw commands, URLs, web payloads, or server logs for real-time regex parsing.
+            </p>
+        </div>
+        <div>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary btn-sm">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"></rect><path d="M3 9h18M9 21V9"></path></svg>
+                View Past Scans
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="scanner-grid">
+    <!-- Scanner Main Panel -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <div class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>
+                Input Payload Inspection
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span id="char-counter" class="font-mono" style="font-size: 0.8rem; color: var(--text-muted);">0 chars</span>
+                <button type="button" id="btn-clear-input" class="btn btn-secondary btn-sm" title="Clear Text">
+                    Clear
+                </button>
+            </div>
+        </div>
+
+        <form id="scanner-form">
+            <div class="form-group">
+                <label for="threat-input" class="form-label" style="display:flex; justify-content:space-between;">
+                    <span>Target String / Payload</span>
+                    <span style="font-size: 0.8rem; color: var(--text-muted); font-weight: normal;">Accepts URLs, shell commands, web requests, SQL queries, or plain text</span>
+                </label>
+                <textarea 
+                    id="threat-input" 
+                    class="form-control" 
+                    placeholder="Enter or paste input payload to analyze... e.g., admin' OR 1=1 -- or ../../etc/passwd"
+                    rows="7"
+                    required
+                ></textarea>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.5rem;">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="threat-category" class="form-label">Detection Scope</label>
+                    <select id="threat-category" class="form-control">
+                        <option value="all" selected>Scan All Patterns (All 5 Cyber Rules)</option>
+                        <option value="SQL Injection">SQL Injection Only</option>
+                        <option value="Script Injection">Script Injection (XSS) Only</option>
+                        <option value="Directory Traversal">Directory Traversal Only</option>
+                        <option value="Command Injection">Suspicious Commands Only</option>
+                        <option value="Phishing / Malicious URL">Suspicious URLs Only</option>
+                    </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label">Scanning Engine</label>
+                    <div style="background: var(--bg-secondary); border: 1px solid var(--bg-card-border); padding: 0.75rem 1rem; border-radius: var(--radius-md); font-size: 0.85rem; color: var(--accent-cyan); display: flex; align-items: center; justify-content: space-between;">
+                        <span>Python 3.13 re Deterministic Engine</span>
+                        <span class="badge badge-clean">Active</span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button type="submit" id="btn-analyze" class="btn btn-primary" style="flex: 1; padding: 0.85rem;">
+                    <span id="btn-text" style="display: flex; align-items: center; gap: 0.5rem; justify-content: center;">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        Analyze Threat Payload
+                    </span>
+                    <span id="btn-spinner" style="display: none; align-items: center; gap: 0.5rem; justify-content: center;">
+                        <svg class="spinner" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle><path d="M12 2a10 10 0 0 1 10 10"></path></svg>
+                        Running Pattern Matcher...
+                    </span>
+                </button>
+            </div>
+        </form>
+
+        <!-- Inline Quick Result Preview (Before Dashboard Redirect) -->
+        <div id="quick-result-card" style="display: none; margin-top: 1.5rem; border-top: 1px solid var(--bg-card-border); padding-top: 1.25rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h4 style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span>Scan Verdict:</span>
+                    <span id="quick-verdict-badge" class="badge"></span>
+                </h4>
+                <a id="link-to-dashboard" href="{{ url_for('dashboard') }}" class="btn btn-cyan btn-sm">
+                    Open Full Analysis Dashboard →
+                </a>
+            </div>
+            
+            <div id="quick-result-details" style="background: var(--bg-secondary); padding: 1rem; border-radius: var(--radius-md); font-size: 0.9rem;">
+                <!-- Filled dynamically by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Demonstration Samples Panel -->
+    <div class="cyber-card">
+        <div class="card-header">
+            <div class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--accent-purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                Benchmark Samples
+            </div>
+            <span class="badge badge-purple">Click to Load</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+            Select any standard benchmark payload to populate the scanner and test the detection engine:
+        </p>
+
+        <div class="sample-buttons-grid">
+            <!-- Sample 1 -->
+            <button type="button" class="sample-btn" data-sample="admin' OR 1=1 --" data-cat="all">
+                <div class="sample-btn-title">
+                    <span>1. SQL Injection</span>
+                    <span class="badge badge-danger">High</span>
+                </div>
+                <div class="sample-btn-code">admin' OR 1=1 --</div>
+            </button>
+
+            <!-- Sample 2 -->
+            <button type="button" class="sample-btn" data-sample="<script>alert(1)</script>" data-cat="all">
+                <div class="sample-btn-title">
+                    <span>2. Script Injection (XSS)</span>
+                    <span class="badge badge-danger">High</span>
+                </div>
+                <div class="sample-btn-code">&lt;script&gt;alert(1)&lt;/script&gt;</div>
+            </button>
+
+            <!-- Sample 3 -->
+            <button type="button" class="sample-btn" data-sample="../../etc/passwd" data-cat="all">
+                <div class="sample-btn-title">
+                    <span>3. Directory Traversal</span>
+                    <span class="badge badge-danger">Critical</span>
+                </div>
+                <div class="sample-btn-code">../../etc/passwd</div>
+            </button>
+
+            <!-- Sample 4 -->
+            <button type="button" class="sample-btn" data-sample="rm -rf /important-directory" data-cat="all">
+                <div class="sample-btn-title">
+                    <span>4. Suspicious Command</span>
+                    <span class="badge badge-danger">Critical</span>
+                </div>
+                <div class="sample-btn-code">rm -rf /important-directory</div>
+            </button>
+
+            <!-- Sample 5 -->
+            <button type="button" class="sample-btn" data-sample="Hello, welcome to our academic portal." data-cat="all">
+                <div class="sample-btn-title">
+                    <span>5. Normal Text (Benign)</span>
+                    <span class="badge badge-clean">Safe</span>
+                </div>
+                <div class="sample-btn-code">Hello, welcome to our academic portal.</div>
+            </button>
+
+            <!-- Bonus Sample: Malicious URL -->
+            <button type="button" class="sample-btn" data-sample="https://bankofamerica.secure-update-notice.com/login.html" data-cat="all">
+                <div class="sample-btn-title">
+                    <span>6. Phishing Authentication URL</span>
+                    <span class="badge badge-warning">Medium</span>
+                </div>
+                <div class="sample-btn-code">https://bankofamerica.secure-update...</div>
+            </button>
+        </div>
+
+        <div style="margin-top: 1.5rem; padding: 0.85rem; background: var(--bg-secondary); border-radius: var(--radius-sm); border-left: 3px solid var(--accent-cyan);">
+            <div style="font-size: 0.78rem; color: var(--text-muted); font-family: var(--font-mono);">
+                NOTE: A regex match flags an educational suspicious indicator, not an exploit execution.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/scanner.js') }}"></script>
+{% endblock %}
+
