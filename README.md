@@ -1,5 +1,11 @@
 # SENTINEL X — Interactive Regex-Based Cybersecurity Threat Detection & Automata Visualization Platform
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Online-brightgreen?style=for-the-badge&logo=render)](https://sentinel-x-cybersecurity.onrender.com/)
+
+🔗 **Live Application:** [https://sentinel-x-cybersecurity.onrender.com/](https://sentinel-x-cybersecurity.onrender.com/)
+
+---
+
 **Student PRN:** `202401110046`  
 **Assigned Application Domain:** Cybersecurity  
 **Core Academic Concepts:** Regular Expressions (RE), Nondeterministic Finite Automata (NFA), Deterministic Finite Automata (DFA), Thompson's Construction, Subset Construction, DFA Minimization (Partition Refinement), Regular Languages, Chomsky Hierarchy, Cybersecurity Pattern Detection.
